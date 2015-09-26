@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 		
 		FormeModele modele(sommets, indices);
 		
-		FormeModele * penta =  fm.generateRegularPolygone(6);
+		FormeModele * penta =  fm.generateRegularPolygone(3);
 		
 		fm.newCollection(string("Triangle"), shader.getProgramID(), *penta);
 
@@ -63,23 +63,21 @@ int main(int argc, char** argv) {
 		for(int j = 0; j < 10000; ++j)
 			biblio.push_back(fm.newObject(string("Triangle"), glm::vec2(rand()%800,rand()%600), glm::vec3( 0, (float)rand() / (float)RAND_MAX , (float)rand() / (float)RAND_MAX  ), rand() % 360  ) );
 
-
-			
-
 		cout << "Fin pop_back" << endl;
 		cout << biblio.size() << endl;
 		std::vector<FormeInstance *>::iterator it;
-		for(int i = 0; i < 500; ++i){
+		for(int i = 0; i < 5000; ++i){
+
 
 			for(it = biblio.begin(); it != biblio.end(); ++it){
 				(*it)->translate((float)rand() / (float)RAND_MAX * 10 - 5,(float)rand() / (float)RAND_MAX * 10 - 5);
-				(*it)->rotate(10);
+				//(*it)->rotate(10);
 			}
-			
+
 			glClear(GL_COLOR_BUFFER_BIT);
 			fm.display();
 			scene.display();
-			SDL_Delay(20);
+
 		}
 		
 		scene.display();

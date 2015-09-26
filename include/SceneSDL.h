@@ -37,12 +37,13 @@ public:
 
 
 private:
-    std::string title;
+    std::string m_title;
     int x, y, w, h;
-    Uint32 flags;
-    SDL_Window* _window;
-    SDL_GLContext _contexteOpenGL;
-    bool _affichable;
+    Uint32 m_flags;
+    SDL_Window* m_window;
+    SDL_GLContext m_OpenGLContext;
+    bool m_displayable;
+
 };
 
 #endif	/* SCENESDL_H */

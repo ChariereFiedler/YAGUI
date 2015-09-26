@@ -72,3 +72,8 @@ target_link_libraries(YAGUI_Example m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${AD
 
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
+
+file(GLOB SHADERS
+  "YAGUI/Shaders/*"
+)
+file(COPY ${SHADERS} DESTINATION ${CMAKE_BINARY_DIR}/Shaders)
