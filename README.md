@@ -1,4 +1,4 @@
-# Currently refactored
+# Currently in refactoring
 
 # YAGUI - **Yes, Another Graphic User Interface**
 
