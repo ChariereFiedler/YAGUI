@@ -17,22 +17,22 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "FormeCollection.h"
+#include "ShapeCollection.h"
 #include "FormeInstance.h"
-#include "FormeModele.h"
-class FormeManager {
-	std::map<std::string, FormeCollection> _listCollections;
+#include "ShapeModel.h"
+class ShapeManager {
+	std::map<std::string, ShapeCollection> _listCollections;
 	glm::mat4 _projection;
-	std::map<unsigned int, FormeModele *> _libRegularModels;
+	std::map<unsigned int, ShapeModel *> _libRegularModels;
 
 
 public:
-	FormeManager( float width = 800, float height = 600);
-	~FormeManager();
+	ShapeManager( float width = 800, float height = 600);
+	~ShapeManager();
 
 
-    FormeModele * generateRegularPolygone(unsigned int nbNode);
-	bool newCollection(std::string key, const GLuint & indShader, FormeModele & modele);
+    ShapeModel * generateRegularPolygone(unsigned int nbNode);
+	bool newCollection(std::string key, const GLuint & indShader, ShapeModel & modele);
 	bool newCollection(std::string key, const GLuint & indShader, unsigned int nbNodes);
 	FormeInstance * newObject(std::string key, const glm::vec2 &position,const glm::vec3 &color,float size = 1, float angle = 0 );
 	void display();

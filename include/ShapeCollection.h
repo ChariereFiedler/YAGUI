@@ -18,91 +18,97 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
-#include "FormeModele.h"
+#include "ShapeModel.h"
 #include "FormeInstance.h"
 
 class FormeInstance;
 /*
-* \brief FormeCollection contains the informations relatives to their objects to display
+* \brief ShapeCollection data container of contained shapes
+* Each collection is defined by a list of elements sharing their geometry
+ * They have all the same model and they are instanced with an instancing algorithm
 */
-class FormeCollection {
-unsigned int  _nbObjects;
-GLuint _ColorBufferId, _PositionBufferId, _AngleBufferId, _SizeBufferId;
+class ShapeCollection {
+	unsigned int m_size; /* The objects number contained by the collection */
+	GLuint 	m_colorBufferId,
+			m_positionBufferId,
+			m_angleBufferId,
+			m_sizeBufferId;
 
-GLuint _indShader;
-FormeModele & _modele;
+	GLuint m_shaderIndex;
+
+	ShapeModel &_model;
 
 
-void pop_back_AllDatas();
+	void pop_back_AllData();
 
 public:
-std::vector<glm::vec3> _allColors;
-std::vector<glm::vec2> _allPositions;
-std::vector<float> _allAngles;
-std::vector<float> _allSizes;
+	std::vector<glm::vec3> _allColors;
+	std::vector<glm::vec2> _allPositions;
+	std::vector<float> _allAngles;
+	std::vector<float> _allSizes;
 
-std::list<FormeInstance*> _allObjects;
+	std::list<FormeInstance*> _allObjects;
 
-    /*
-    * \brief FormeCollection constructor
-    * \param orig the FormeCollection object to copy
+	/*
+    * \brief ShapeCollection constructor
+    * \param orig the ShapeCollection object to copy
     */
-	FormeCollection(const FormeCollection& orig);
+	ShapeCollection(const ShapeCollection & orig);
 
-    /*
-    * \brief FormeCollection constructor
+	/*
+    * \brief ShapeCollection constructor
     * \param indShader a constant reference to the shader index used for the display
-    *  \param modele the modele of the objects contained by the collection
+    * \param model the shape model of the collection
     */
-	FormeCollection(const GLuint & indShader, FormeModele & modele);
-	virtual ~FormeCollection();
+	ShapeCollection(const GLuint & indShader, ShapeModel &model);
+	virtual ~ShapeCollection();
 	/*
     * \brief Getter for the objects number
     * \return the objects number contained by the collection
     */
-    const unsigned int getNbObjects()const;
-    /*
+	const unsigned int getNbObjects()const;
+	/*
     * `\brief increase the number of objects by one
     */
 	void incNbObjects();
 
-    /*
+	/*
     * \brief display the objects contained
     * \param projection the projection Matrix used for the display
     */
 	void display(const glm::mat4 & projection);
 
-    /*
+	/*
     * \brief add an object at the end of the collection
     * \param object the object to add
     */
-    void push_back(FormeInstance * object);
+	void push_back(FormeInstance * object);
 	/*
 	* \brief delete the last item of the collection
 	*/
-    void pop_back();
+	void pop_back();
 
-    /*
+	/*
     * \brief add an object at the end of the collection
     */
 	void addInstance(FormeInstance * instance);
 	void removeInstance(FormeInstance * instance);
-	
-	
+
+
 private:
-	
-	
+
+
 	/*
 	* \brief Operation requiered to initialize the buffer objects which contains the informations of the objects
 	*/
 	void init();
 
 	void close();
-    /*
+	/*
     * \brief Operation requiered to close the buffers relatives of the objects informations
     */
 	void updateBuffers();
-	
+
 };
 
 #endif	/* FORMECOLLECTION_H */

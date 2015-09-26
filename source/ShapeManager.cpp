@@ -5,20 +5,20 @@
  * Created on 15 novembre 2014, 17:32
  */
 
-#include "FormeManager.h"
+#include "ShapeManager.h"
 #include <iostream>
 #define M_PI 3.1415926535897932384
 
-FormeManager::FormeManager(float width, float height) {
+ShapeManager::ShapeManager(float width, float height) {
 	_projection = glm::ortho( 0.0f, width, height, 0.0f,-5.0f, 5.0f);
 }
 
-FormeManager::~FormeManager() {
+ShapeManager::~ShapeManager() {
 }
 
-bool FormeManager::newCollection(std::string key, const GLuint & indShader, unsigned int nbNodes){
-  std::map<unsigned int, FormeModele*>::key_compare comp;
-  std::map<unsigned int, FormeModele*>::iterator it;
+bool ShapeManager::newCollection(std::string key, const GLuint & indShader, unsigned int nbNodes){
+  std::map<unsigned int, ShapeModel *>::key_compare comp;
+  std::map<unsigned int, ShapeModel *>::iterator it;
 
   comp = _libRegularModels.key_comp();
   it = _libRegularModels.find(nbNodes);
@@ -31,13 +31,13 @@ bool FormeManager::newCollection(std::string key, const GLuint & indShader, unsi
   return newCollection(key, indShader, *(it->second) );
 }
 
-bool FormeManager::newCollection(std::string key, const GLuint & indShader, FormeModele & modele){
-	 return _listCollections.emplace(key, FormeCollection(indShader, modele )).second;
+bool ShapeManager::newCollection(std::string key, const GLuint & indShader, ShapeModel & modele){
+	 return _listCollections.emplace(key, ShapeCollection(indShader, modele )).second;
 }
 
-FormeInstance * FormeManager::newObject(std::string key, const glm::vec2 &position, const glm::vec3 &color,float size, float angle){
-  std::map<std::string, FormeCollection>::key_compare comp;
-  std::map<std::string, FormeCollection>::iterator it;
+FormeInstance *ShapeManager::newObject(std::string key, const glm::vec2 &position, const glm::vec3 &color,float size, float angle){
+  std::map<std::string, ShapeCollection>::key_compare comp;
+  std::map<std::string, ShapeCollection>::iterator it;
   FormeInstance *instance;
   
   comp = _listCollections.key_comp();
@@ -49,15 +49,15 @@ FormeInstance * FormeManager::newObject(std::string key, const glm::vec2 &positi
   return instance;
 }
 
-void FormeManager::display(){
+void ShapeManager::display(){
   glClear(GL_COLOR_BUFFER_BIT);
-	std::map<std::string, FormeCollection>::iterator it;
+	std::map<std::string, ShapeCollection>::iterator it;
 	for(it = _listCollections.begin() ; it != _listCollections.end(); it++ ){
 		it->second.display(_projection);
 	}
 }
 
-FormeModele * FormeManager::generateRegularPolygone(unsigned int nbNode){
+ShapeModel *ShapeManager::generateRegularPolygone(unsigned int nbNode){
   std::vector<float> nodes;
   std::vector<unsigned int> indices;
   if(nbNode > 2){
@@ -85,5 +85,5 @@ FormeModele * FormeManager::generateRegularPolygone(unsigned int nbNode){
       }*/
   }
 
-  return new FormeModele(nodes, indices);
+  return new ShapeModel(nodes, indices);
 }

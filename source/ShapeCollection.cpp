@@ -5,69 +5,69 @@
  * Created on 15 novembre 2014, 17:05
  */
 
-#include "FormeCollection.h"
+#include "ShapeCollection.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 using namespace std;
-FormeCollection::FormeCollection(const GLuint & indShader, FormeModele & modele):
-	_nbObjects(0),
-	_indShader(indShader),
-	_modele(modele)	
+ShapeCollection::ShapeCollection(const GLuint & indShader, ShapeModel &model):
+	m_size(0),
+	m_shaderIndex(indShader),
+	_model(model)
 {
 	init();
 }
 
-FormeCollection::FormeCollection(const FormeCollection& orig):
-	_nbObjects(0),
-	_indShader(orig._indShader),
-	_modele(orig._modele)
+ShapeCollection::ShapeCollection(const ShapeCollection & orig):
+	m_size(0),
+	m_shaderIndex(orig.m_shaderIndex),
+	_model(orig._model)
 	
 {
 	init();
 }
 
-FormeCollection::~FormeCollection() {
+ShapeCollection::~ShapeCollection() {
 }
 
-const unsigned int FormeCollection::getNbObjects()const{
-	return _nbObjects;
+const unsigned int ShapeCollection::getNbObjects()const{
+	return m_size;
 }
 
-void FormeCollection::incNbObjects(){
-	++_nbObjects;
+void ShapeCollection::incNbObjects(){
+	++m_size;
 }
 
-void FormeCollection::init(){
-  	_modele.init();
-  	glGenBuffers(1, &_PositionBufferId);
-  	glBindBuffer(GL_ARRAY_BUFFER, _PositionBufferId);
+void ShapeCollection::init(){
+  	_model.init();
+  	glGenBuffers(1, &m_positionBufferId);
+  	glBindBuffer(GL_ARRAY_BUFFER, m_positionBufferId);
   
-  	glGenBuffers(1, &_ColorBufferId);
- 	glBindBuffer(GL_ARRAY_BUFFER, _ColorBufferId);
+  	glGenBuffers(1, &m_colorBufferId);
+ 	glBindBuffer(GL_ARRAY_BUFFER, m_colorBufferId);
 
-	glGenBuffers(1, &_AngleBufferId);
-  	glBindBuffer(GL_ARRAY_BUFFER,_AngleBufferId);
+	glGenBuffers(1, &m_angleBufferId);
+  	glBindBuffer(GL_ARRAY_BUFFER, m_angleBufferId);
 
-	glGenBuffers(1, &_SizeBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER,_SizeBufferId);
+	glGenBuffers(1, &m_sizeBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_sizeBufferId);
 
   
 }
 
-void FormeCollection::display(const glm::mat4 & projection){
+void ShapeCollection::display(const glm::mat4 & projection){
 	updateBuffers();
 
 
-	glUseProgram( _indShader);
-	glUniformMatrix4fv(glGetUniformLocation(_indShader, "P"), 1, GL_FALSE, glm::value_ptr(projection));
-	glDrawElementsInstanced(GL_TRIANGLES, _modele.GetNbIndices(), GL_UNSIGNED_INT, (GLvoid*) 0, _nbObjects);
+	glUseProgram(m_shaderIndex);
+	glUniformMatrix4fv(glGetUniformLocation(m_shaderIndex, "P"), 1, GL_FALSE, glm::value_ptr(projection));
+	glDrawElementsInstanced(GL_TRIANGLES, _model.GetNbIndices(), GL_UNSIGNED_INT, (GLvoid*) 0, m_size);
 
 
 	// On désactive le tableau Vertex Attrib puisque l'on n'en a plus besoin
 }
 
-void FormeCollection::close() {
+void ShapeCollection::close() {
 	glDisableVertexAttribArray(4);
     glDisableVertexAttribArray(3);
   	glDisableVertexAttribArray(2);
@@ -81,25 +81,25 @@ void FormeCollection::close() {
 }
 
 
-void FormeCollection::updateBuffers(){
-	_modele.bindBuffers();
+void ShapeCollection::updateBuffers(){
+	_model.bindBuffers();
 
-	glBindBuffer(GL_ARRAY_BUFFER, _PositionBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_positionBufferId);
 	glBufferData(GL_ARRAY_BUFFER,_allPositions.size() * 2 * sizeof(GLfloat), &_allPositions.front(), GL_STREAM_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, _ColorBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorBufferId);
 	glBufferData(GL_ARRAY_BUFFER,_allColors.size()* 3 * sizeof(GLfloat), &_allColors.front(), GL_STREAM_DRAW); 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _AngleBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_angleBufferId);
 	glBufferData(GL_ARRAY_BUFFER,_allAngles.size() * sizeof(float), &_allAngles.front(), GL_STREAM_DRAW);
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(3);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _SizeBufferId);
+    glBindBuffer(GL_ARRAY_BUFFER, m_sizeBufferId);
     glBufferData(GL_ARRAY_BUFFER,_allSizes.size() * sizeof(float), &_allSizes.front(), GL_STREAM_DRAW);
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(4);
@@ -112,22 +112,22 @@ void FormeCollection::updateBuffers(){
 	
 }
 
-void FormeCollection::push_back(FormeInstance * object){
+void ShapeCollection::push_back(FormeInstance * object){
 	_allObjects.push_back(object);
-	_nbObjects++;
+	m_size++;
 }
 
-void FormeCollection::pop_back(){
-	_nbObjects--;
+void ShapeCollection::pop_back(){
+	m_size--;
 
-	pop_back_AllDatas();
+	pop_back_AllData();
 }
 
-void FormeCollection::addInstance(FormeInstance * instance){
+void ShapeCollection::addInstance(FormeInstance * instance){
 	_allObjects.push_back(instance);
 }
 
-void FormeCollection::removeInstance(FormeInstance * instance){
+void ShapeCollection::removeInstance(FormeInstance * instance){
 	
 	list<FormeInstance*>::iterator it, itEnd;
 
@@ -144,14 +144,14 @@ void FormeCollection::removeInstance(FormeInstance * instance){
 	else{
 		(**itEnd).setIndCollection((**it).getIndCollection());
 		(*it) = (*itEnd);
-		--_nbObjects;
-		pop_back_AllDatas();
+		--m_size;
+		pop_back_AllData();
 	}
 	
 }
 
 
- void FormeCollection::pop_back_AllDatas(){
+ void ShapeCollection::pop_back_AllData(){
  	_allObjects.pop_back();
 	_allColors.pop_back();
 	_allPositions.pop_back();

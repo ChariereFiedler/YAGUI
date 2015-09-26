@@ -5,9 +5,9 @@
  * Created on 17 novembre 2014, 19:02
  */
 #include <iostream>
-#include "FormeModele.h"
+#include "ShapeModel.h"
 using namespace std;
-FormeModele::FormeModele(vector<float> vertex, vector<unsigned int> indices):
+ShapeModel::ShapeModel(vector<float> vertex, vector<unsigned int> indices):
 	_vertex(vertex),
 	_indices(indices),
 	_nbIndices(indices.size()),
@@ -22,7 +22,7 @@ FormeModele::FormeModele(vector<float> vertex, vector<unsigned int> indices):
 	std::cout << "Vao : "	<< _VaoId << std::endl;
 }
 
-FormeModele::FormeModele(const FormeModele& orig):
+ShapeModel::ShapeModel(const ShapeModel & orig):
 	_vertex(orig._vertex),
 	_indices(orig._indices),
 	_nbIndices(_indices.size()),
@@ -37,10 +37,10 @@ FormeModele::FormeModele(const FormeModele& orig):
 	std::cout << "Vao : "	<< _VaoId << std::endl;
 }
 
-FormeModele::~FormeModele() {
+ShapeModel::~ShapeModel() {
 }
 
-void FormeModele::init(){
+void ShapeModel::init(){
   glGenVertexArrays(1, &_VaoId);
   glBindVertexArray(_VaoId);
 
@@ -54,13 +54,13 @@ void FormeModele::init(){
 
 }
 
-void FormeModele::bindBuffers() const{
+void ShapeModel::bindBuffers() const{
   glBindVertexArray(_VaoId);
   
   glBindBuffer(GL_ARRAY_BUFFER, _VboId);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0,0);
   glEnableVertexAttribArray(0);
 }
-void FormeModele::bindVBO(){
+void ShapeModel::bindVBO(){
 	glBindBuffer(GL_ARRAY_BUFFER, _VboId);
 }

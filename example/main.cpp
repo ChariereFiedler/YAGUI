@@ -20,8 +20,8 @@
 #include "SceneSDL.h"
 
 #include "FormeInstance.h"
-#include "FormeManager.h"
-#include "FormeModele.h"
+#include "ShapeManager.h"
+#include "ShapeModel.h"
 #include "Shader.h"
 using namespace std;
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
         
 		scene.init();
 		
-		FormeManager fm;
+		ShapeManager fm;
 		Shader shader("Shaders/forme2D.vert", "Shaders/forme2D.frag");
 
 		if(!shader.load())return 1;
@@ -50,9 +50,9 @@ int main(int argc, char** argv) {
 		glm::vec2 pos(0,0);
 		glm::vec3 color(1,0,0);
 		
-		FormeModele modele(sommets, indices);
+		ShapeModel modele(sommets, indices);
 		
-		FormeModele * penta =  fm.generateRegularPolygone(3);
+		ShapeModel * penta =  fm.generateRegularPolygone(3);
 		
 		fm.newCollection(string("Triangle"), shader.getProgramID(), *penta);
 

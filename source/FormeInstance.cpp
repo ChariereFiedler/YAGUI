@@ -10,7 +10,7 @@
 
 using namespace std;
 
-FormeInstance::FormeInstance(FormeCollection &collection,  const glm::vec2 &pos,const glm::vec3 &color, float size, float angle):
+FormeInstance::FormeInstance(ShapeCollection &collection,  const glm::vec2 &pos,const glm::vec3 &color, float size, float angle):
 	_collection(collection),
 	_angle(angle)
 {

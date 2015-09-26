@@ -11,17 +11,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "FormeCollection.h"
+#include "ShapeCollection.h"
 
-class FormeCollection;
+class ShapeCollection;
 
 class FormeInstance {
 	glm::vec2 _transform;
-	FormeCollection &_collection;
+	ShapeCollection &_collection;
 	unsigned int _indCollection;
 	float _angle;
 public:
-	FormeInstance(FormeCollection &collection, const glm::vec2 &pos,const glm::vec3 &color, float size = 1 , float angle = 0);
+	FormeInstance(ShapeCollection &collection, const glm::vec2 &pos,const glm::vec3 &color, float size = 1 , float angle = 0);
 	FormeInstance(const FormeInstance& orig);
 	virtual ~FormeInstance();
 

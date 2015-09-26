@@ -15,11 +15,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-class FormeModele {
+class ShapeModel {
 public:
-	FormeModele(std::vector<float> vertex, std::vector<unsigned int> indices);
-	FormeModele(const FormeModele& orig);
-	virtual ~FormeModele();
+	ShapeModel(std::vector<float> vertex, std::vector<unsigned int> indices);
+	ShapeModel(const ShapeModel & orig);
+	virtual ~ShapeModel();
 	
 	void init();
 	void bindBuffers() const;
