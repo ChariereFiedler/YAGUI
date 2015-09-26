@@ -3,15 +3,7 @@
 #define DEF_SHADER
 #define GLM_FORCE_RADIANS
 
-// Include Windows
-
-
-
 #include <GL/glew.h>
-
-
-
-// Includes communs
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,21 +12,21 @@
 #include <fstream>
 
 
-// Classe Shader
 
+//Todo : Refactor this class with a better and cleaner solution
 class Shader
 {
     public:
 
     Shader();
-    Shader(Shader const &shaderACopier);
+    Shader(Shader const &origin);
     Shader(std::string vertexSource, std::string fragmentSource);
     ~Shader();
 
-    Shader& operator=(Shader const &shaderACopier);
+    Shader& operator=(Shader const &origin);
 
-    bool charger();
-    bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
+    bool load();
+    bool compile(GLuint &shader, GLenum type, std::string const &fileSource);
     const GLuint & getProgramID() const;
 
 

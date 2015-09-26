@@ -40,7 +40,8 @@ int main(int argc, char** argv) {
 		
 		FormeManager fm;
 		Shader shader("Shaders/forme2D.vert", "Shaders/forme2D.frag");
-		if(!shader.charger())return 1;
+
+		if(!shader.load())return 1;
 		
 		std::vector<float> sommets = {-40 , -20 , 0 ,50, 40 , -20};
 		std::vector<unsigned int> indices = { 0, 1, 2};

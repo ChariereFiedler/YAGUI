@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Shader.h"
 
 // Constructeurs et Destructeur
@@ -5,16 +6,16 @@
 Shader::Shader() : m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexSource(), m_fragmentSource() {
 }
 
-Shader::Shader(Shader const &shaderACopier) {
+Shader::Shader(Shader const &origin) {
   // Copie des fichiers sources
 
-  m_vertexSource = shaderACopier.m_vertexSource;
-  m_fragmentSource = shaderACopier.m_fragmentSource;
+  m_vertexSource = origin.m_vertexSource;
+  m_fragmentSource = origin.m_fragmentSource;
 
 
   // Chargement du nouveau shader
 
-  charger();
+  load();
 }
 
 Shader::Shader(std::string vertexSource, std::string fragmentSource) : m_vertexID(0), m_fragmentID(0), m_programID(0),
@@ -30,26 +31,17 @@ Shader::~Shader() {
 }
 
 
-// M�thodes
 
-Shader& Shader::operator=(Shader const &shaderACopier) {
-  // Copie des fichiers sources
+Shader& Shader::operator=(Shader const &origin) {
+  m_vertexSource = origin.m_vertexSource;
+  m_fragmentSource = origin.m_fragmentSource;
 
-  m_vertexSource = shaderACopier.m_vertexSource;
-  m_fragmentSource = shaderACopier.m_fragmentSource;
-
-
-  // Chargement du nouveau shader
-
-  charger();
-
-
-  // Retour du pointeur this
+  load();
 
   return *this;
 }
 
-bool Shader::charger() {
+bool Shader::load() {
   // Destruction d'un �ventuel ancien Shader
 
   if (glIsShader(m_vertexID) == GL_TRUE)
@@ -62,19 +54,17 @@ bool Shader::charger() {
 	glDeleteProgram(m_programID);
 
 
-  // Compilation des shaders
+  if (!compile(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
+	throw std::runtime_error("Unable to compile the vertex shader");
 
-  if (!compilerShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
-	return false;
+  if (!compile(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
+    throw std::runtime_error("Unable to compile the fragment shader");
 
-  if (!compilerShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
-	return false;
-
-
-  // Cr�ation du programme
 
   m_programID = glCreateProgram();
 
+  if(!m_programID)
+    throw std::runtime_error("An error occurs creating the program object");
 
   // Association des shaders
 
@@ -140,42 +130,38 @@ bool Shader::charger() {
 	return true;
 }
 
-bool Shader::compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource) {
+bool Shader::compile(GLuint &shader, GLenum type, std::string const &fileSource) {
   // Cr�ation du shader
 
   shader = glCreateShader(type);
 
   // V�rification du shader
 
-  if (shader == 0) {
-	std::cout << "Erreur, le type de shader (" << type << ") n'existe pas" << std::endl;
-	return false;
+  if (!shader) {
+	throw std::runtime_error("Error occurs during the creation of a shader");
   }
 
   // Flux de lecture
-  std::ifstream fichier(fichierSource.c_str());
+  std::ifstream file(fileSource.c_str());
 
   // Test d'ouverture
 
-  if (!fichier) {
-	std::cout << "Erreur le fichier " << fichierSource << " est introuvable" << std::endl;
-	glDeleteShader(shader);
-	return false;
+  if (!file) {
+    throw std::runtime_error("The source file relative to the filepath does not exist");
   }
   // Strings permettant de lire le code source
-  std::string ligne;
+  std::string line;
   std::string codeSource;
-  // Lecture
-  while (getline(fichier, ligne))
-	codeSource += ligne + '\n';
-  // Fermeture du fichier
-  fichier.close();
 
-  // R�cup�ration de la chaine C du code source
-  const GLchar* chaineCodeSource = codeSource.c_str();
+  while (getline(file, line))
+	codeSource += line + char('\n');
+  file.close();
+
+
+  const GLchar* sourceCodeString = codeSource.c_str();
 
   // Envoi du code source au shader
-  glShaderSource(shader, 1, &chaineCodeSource, 0);
+  glShaderSource(shader, 1, &sourceCodeString, 0);
 
   // Compilation du shader
   glCompileShader(shader);

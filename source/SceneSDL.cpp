@@ -27,17 +27,19 @@ SceneSDL::SceneSDL(std::string title,
 //SceneSDL::SceneSDL(const SceneSDL& orig) {}
 
 SceneSDL::~SceneSDL() {
-    SDL_DestroyWindow(m_window);
+    destroy();
 }
 void SceneSDL::destroy(){
-    SDL_DestroyWindow(m_window);
+    if(m_displayable){
+        SDL_DestroyWindow(m_window);
+        m_displayable = false;
+    }
 }
 
 void SceneSDL::display(){
+    //TODO : remove this flag, it is called every frame
     if(m_displayable)
-    {
         SDL_GL_SwapWindow(this->m_window);
-    }
 }
 
 
