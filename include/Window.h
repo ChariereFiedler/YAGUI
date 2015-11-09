@@ -10,20 +10,19 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-#define GLEW_STATIC
 #include <GL/glew.h>
 
-class SceneSDL {
+class Window {
 public:
-    SceneSDL(std::string title = "Window", 
+    Window(std::string title = "Window",
                 int x =  50, 
                 int y =  50, 
                 int w = 800,
                 int h = 600,
-                Uint32 flags = SDL_WINDOW_OPENGL);
-    SceneSDL(const SceneSDL& orig);
-    virtual ~SceneSDL();
-    void init();
+                Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    Window(const Window & orig);
+    virtual ~Window();
+    void load();
     void destroy();
     void display();
 

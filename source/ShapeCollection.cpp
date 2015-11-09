@@ -1,28 +1,23 @@
-/* 
- * File:   FormeCollection.cpp
- * Author: Ycarh
- * 
- * Created on 15 novembre 2014, 17:05
- */
-
 #include "ShapeCollection.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 using namespace std;
 ShapeCollection::ShapeCollection(const GLuint & indShader, ShapeModel &model):
-	m_size(0),
-	m_shaderIndex(indShader),
-	_model(model)
+		m_size(0),
+		m_shaderIndex(indShader),
+		_model(model),
+		positionBuffer(1, GL_ARRAY_BUFFER, GL_STREAM_DRAW, 3, 1, "Position")
 {
 	init();
 }
 
 ShapeCollection::ShapeCollection(const ShapeCollection & orig):
-	m_size(0),
-	m_shaderIndex(orig.m_shaderIndex),
-	_model(orig._model)
-	
+		m_size(0),
+		m_shaderIndex(orig.m_shaderIndex),
+		_model(orig._model),
+		positionBuffer(orig.positionBuffer)
+
 {
 	init();
 }
@@ -38,21 +33,31 @@ void ShapeCollection::incNbObjects(){
 	++m_size;
 }
 
+
+template<typename T>
+void initBuffer(T & buffer) {
+
+}
+
 void ShapeCollection::init(){
-  	_model.init();
-  	glGenBuffers(1, &m_positionBufferId);
-  	glBindBuffer(GL_ARRAY_BUFFER, m_positionBufferId);
-  
-  	glGenBuffers(1, &m_colorBufferId);
- 	glBindBuffer(GL_ARRAY_BUFFER, m_colorBufferId);
+	_model.init();
+	/*
+	glGenBuffers(1, &m_positionBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_positionBufferId);
+	*/
+
+	positionBuffer.load();
+
+	glGenBuffers(1, &m_colorBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorBufferId);
 
 	glGenBuffers(1, &m_angleBufferId);
-  	glBindBuffer(GL_ARRAY_BUFFER, m_angleBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_angleBufferId);
 
 	glGenBuffers(1, &m_sizeBufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, m_sizeBufferId);
 
-  
+
 }
 
 void ShapeCollection::display(const glm::mat4 & projection){
@@ -69,28 +74,32 @@ void ShapeCollection::display(const glm::mat4 & projection){
 
 void ShapeCollection::close() {
 	glDisableVertexAttribArray(4);
-    glDisableVertexAttribArray(3);
-  	glDisableVertexAttribArray(2);
-  	glDisableVertexAttribArray(1);
-  	glDisableVertexAttribArray(0);
-  
-  	glBindBuffer(GL_ARRAY_BUFFER, 0);
-  	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(0);
 
-  	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
 }
 
 
+//template <typename T <typename C> >
 void ShapeCollection::updateBuffers(){
 	_model.bindBuffers();
 
+	/*
 	glBindBuffer(GL_ARRAY_BUFFER, m_positionBufferId);
-	glBufferData(GL_ARRAY_BUFFER,_allPositions.size() * 2 * sizeof(GLfloat), &_allPositions.front(), GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,_allPositions.size() * sizeof(glm::vec2), &_allPositions.front(), GL_STREAM_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
-	
+	 */
+	//positionBuffer.update();
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_colorBufferId);
-	glBufferData(GL_ARRAY_BUFFER,_allColors.size()* 3 * sizeof(GLfloat), &_allColors.front(), GL_STREAM_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER,_allColors.size()*3 * sizeof(glm::vec3), &_allColors.front(), GL_STREAM_DRAW);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
 
@@ -99,20 +108,20 @@ void ShapeCollection::updateBuffers(){
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(3);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_sizeBufferId);
-    glBufferData(GL_ARRAY_BUFFER,_allSizes.size() * sizeof(float), &_allSizes.front(), GL_STREAM_DRAW);
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(4);
-	
+	glBindBuffer(GL_ARRAY_BUFFER, m_sizeBufferId);
+	glBufferData(GL_ARRAY_BUFFER,_allSizes.size() * sizeof(float), &_allSizes.front(), GL_STREAM_DRAW);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(4);
+
 	glVertexAttribDivisor(0, 0);
-	glVertexAttribDivisor(1, 1);
+	//glVertexAttribDivisor(1, 1);
 	glVertexAttribDivisor(2, 1);
 	glVertexAttribDivisor(3, 1);
-    glVertexAttribDivisor(4, 1);
-	
+	glVertexAttribDivisor(4, 1);
+
 }
 
-void ShapeCollection::push_back(FormeInstance * object){
+void ShapeCollection::push_back(Shape * object){
 	_allObjects.push_back(object);
 	m_size++;
 }
@@ -123,13 +132,13 @@ void ShapeCollection::pop_back(){
 	pop_back_AllData();
 }
 
-void ShapeCollection::addInstance(FormeInstance * instance){
+void ShapeCollection::addInstance(Shape * instance){
 	_allObjects.push_back(instance);
 }
 
-void ShapeCollection::removeInstance(FormeInstance * instance){
-	
-	list<FormeInstance*>::iterator it, itEnd;
+void ShapeCollection::removeInstance(Shape * instance){
+
+	list<Shape *>::iterator it, itEnd;
 
 	it = _allObjects.begin();
 	itEnd = _allObjects.end();
@@ -138,7 +147,7 @@ void ShapeCollection::removeInstance(FormeInstance * instance){
 		it++;
 		//cout << "Iter : " << (*it)->getIndCollection() << endl;
 	}
-	
+
 	if( (*it)->getIndCollection() != instance->getIndCollection())
 		cout << "Instance inexistante a supprimer" << endl;
 	else{
@@ -147,14 +156,14 @@ void ShapeCollection::removeInstance(FormeInstance * instance){
 		--m_size;
 		pop_back_AllData();
 	}
-	
+
 }
 
 
- void ShapeCollection::pop_back_AllData(){
- 	_allObjects.pop_back();
+void ShapeCollection::pop_back_AllData(){
+	_allObjects.pop_back();
 	_allColors.pop_back();
 	_allPositions.pop_back();
 	_allAngles.pop_back();
-     _allSizes.pop_back();
- }
+	_allSizes.pop_back();
+}

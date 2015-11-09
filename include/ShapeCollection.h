@@ -11,6 +11,7 @@
 
 
 
+
 #include <vector>
 #include <list>
 #include <GL/glew.h>
@@ -19,9 +20,10 @@
 
 #include "Shader.h"
 #include "ShapeModel.h"
-#include "FormeInstance.h"
+#include "Shape.h"
+#include "Buffer.h"
 
-class FormeInstance;
+class Shape;
 /*
 * \brief ShapeCollection data container of contained shapes
 * Each collection is defined by a list of elements sharing their geometry
@@ -39,6 +41,8 @@ class ShapeCollection {
 	ShapeModel &_model;
 
 
+
+
 	void pop_back_AllData();
 
 public:
@@ -47,7 +51,9 @@ public:
 	std::vector<float> _allAngles;
 	std::vector<float> _allSizes;
 
-	std::list<FormeInstance*> _allObjects;
+	Buffer<GLfloat> positionBuffer;
+
+	std::list<Shape *> _allObjects;
 
 	/*
     * \brief ShapeCollection constructor
@@ -82,7 +88,7 @@ public:
     * \brief add an object at the end of the collection
     * \param object the object to add
     */
-	void push_back(FormeInstance * object);
+	void push_back(Shape * object);
 	/*
 	* \brief delete the last item of the collection
 	*/
@@ -91,8 +97,8 @@ public:
 	/*
     * \brief add an object at the end of the collection
     */
-	void addInstance(FormeInstance * instance);
-	void removeInstance(FormeInstance * instance);
+	void addInstance(Shape * instance);
+	void removeInstance(Shape * instance);
 
 
 private:

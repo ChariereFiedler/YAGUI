@@ -18,7 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ShapeCollection.h"
-#include "FormeInstance.h"
+#include "Shape.h"
 #include "ShapeModel.h"
 class ShapeManager {
 	std::map<std::string, ShapeCollection> _listCollections;
@@ -31,10 +31,10 @@ public:
 	~ShapeManager();
 
 
-    ShapeModel * generateRegularPolygone(unsigned int nbNode);
-	bool newCollection(std::string key, const GLuint & indShader, ShapeModel & modele);
+    ShapeModel *generateRegularPolygon(unsigned int nbNode);
+	bool newCollection(std::string key, const GLuint & indShader, ShapeModel &model);
 	bool newCollection(std::string key, const GLuint & indShader, unsigned int nbNodes);
-	FormeInstance * newObject(std::string key, const glm::vec2 &position,const glm::vec3 &color,float size = 1, float angle = 0 );
+	Shape * newObject(std::string key, const glm::vec2 &position,const glm::vec3 &color,float size = 1, float angle = 0 );
 	void display();
 	//void close();
 };	

@@ -64,7 +64,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(ADDITIONAL_LIBS "mingw32")
 endif()
 
-add_library(YAGUI ${source_files})
+add_library(YAGUI ${source_files} include/GL_Error.h)
 target_link_libraries(YAGUI m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ADDITIONAL_LIBS} SDL2 SDL2main)
 add_executable(YAGUI_Example example/main.cpp)
 target_link_libraries(YAGUI_Example m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ADDITIONAL_LIBS} SDL2 SDL2main YAGUI)

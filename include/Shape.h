@@ -15,15 +15,15 @@
 
 class ShapeCollection;
 
-class FormeInstance {
+class Shape {
 	glm::vec2 _transform;
 	ShapeCollection &_collection;
 	unsigned int _indCollection;
 	float _angle;
 public:
-	FormeInstance(ShapeCollection &collection, const glm::vec2 &pos,const glm::vec3 &color, float size = 1 , float angle = 0);
-	FormeInstance(const FormeInstance& orig);
-	virtual ~FormeInstance();
+	Shape(ShapeCollection &collection, const glm::vec2 &pos,const glm::vec3 &color, float size = 1 , float angle = 0);
+	Shape(const Shape & orig);
+	virtual ~Shape();
 
 
 	const glm::vec3 & getColor()const;
@@ -46,10 +46,10 @@ public:
     void addColor(float r, float v, float b);
 	void rotate(float angle);
 	void translate(float x, float y);
-	void effet();
+	void effect();
 
 
-	FormeInstance& operator=(const FormeInstance &orig);
+	Shape & operator=(const Shape &orig);
 private:
 	void init();
 	

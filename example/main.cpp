@@ -4,88 +4,90 @@
  *
  * Created on 29 septembre 2014, 21:54
  */
-#define GLM_FORCE_RADIANS
+
 
 #include <cstdlib>
 
-#include <cstdlib>
 #include <SDL2/SDL.h>
 #include <iostream>
-#include <stdio.h>
 
-#include <iostream> 
+#include <Geometry.h>
+#include <Instance.h>
+
 #include <stdexcept> 
   
 
-#include "SceneSDL.h"
+#include "Window.h"
 
-#include "FormeInstance.h"
-#include "ShapeManager.h"
-#include "ShapeModel.h"
-#include "Shader.h"
+#include <GL_Error.h>
+
 using namespace std;
 
-/*
- * 
- */
+void oldMain(){
 
+    glGetError();
+
+    Window scene;
+    scene.load();
+    GL_CHECK_ERROR;
+    glm::mat4 projection = glm::perspective(90.0f, 4.0f/3.0f, 0.1f, 1500.0f);
+
+    glm::mat4 modelView = glm::lookAt(
+            glm::vec3(0,0,100), //Eye Position
+            glm::vec3(0,0,0), //Center position
+            glm::vec3(0,1.,0.)	// Vertical appearing vector
+    );
+
+    projection = modelView = glm::mat4(1);
+
+
+    GL_CHECK_ERROR;
+    Shader shader("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    GL_CHECK_ERROR;
+    if(!shader.load())
+        std::cout<<"Erreur de chargement du shader";
+    GL_CHECK_ERROR;
+    std::vector<GLfloat>vertices = {
+            0, 1 , 0,
+            1 , 0  , 0,
+            1, 1 , 0
+    };
+    GL_CHECK_ERROR;
+    std::vector<GLfloat> normals={0, 1 , 0,
+                                  1 , 0  , 0,
+                                  1, 1 , 0};
+
+    std::vector<GLfloat> uv = {0, 1 , 0,
+                               1 , 0  , 0,
+                               1, 1 , 0};
+
+    std::vector<GLuint> indices = {0,1,2};
+
+    GL_CHECK_ERROR;
+    Geometry cube(
+            vertices,
+            normals,
+            uv,
+            indices
+    );
+
+    GL_CHECK_ERROR;
+    Instance object(cube, shader);
+    GL_CHECK_ERROR;
+
+    while(true) {
+
+        object.display(projection, modelView);
+        GL_CHECK_ERROR;
+        scene.display();
+        GL_CHECK_ERROR;
+        //std::cout<< gluErrorString(glGetError()) << std::endl;
+    }
+}
 
 int main(int argc, char** argv) {
+    oldMain();
 
-		srand(0);
-	
-		SceneSDL scene;
-        
-		scene.init();
-		
-		ShapeManager fm;
-		Shader shader("Shaders/forme2D.vert", "Shaders/forme2D.frag");
-
-		if(!shader.load())return 1;
-		
-		std::vector<float> sommets = {-40 , -20 , 0 ,50, 40 , -20};
-		std::vector<unsigned int> indices = { 0, 1, 2};
-		std::vector<FormeInstance *> biblio;
-		
-		glm::vec2 pos(0,0);
-		glm::vec3 color(1,0,0);
-		
-		ShapeModel modele(sommets, indices);
-		
-		ShapeModel * penta =  fm.generateRegularPolygone(3);
-		
-		fm.newCollection(string("Triangle"), shader.getProgramID(), *penta);
-
-
-		//delete biblio.front();
-		//biblio.erase(biblio.begin()--);
-
-
-		for(int j = 0; j < 10000; ++j)
-			biblio.push_back(fm.newObject(string("Triangle"), glm::vec2(rand()%800,rand()%600), glm::vec3( 0, (float)rand() / (float)RAND_MAX , (float)rand() / (float)RAND_MAX  ), rand() % 360  ) );
-
-		cout << "Fin pop_back" << endl;
-		cout << biblio.size() << endl;
-		std::vector<FormeInstance *>::iterator it;
-		for(int i = 0; i < 5000; ++i){
-
-
-			for(it = biblio.begin(); it != biblio.end(); ++it){
-				(*it)->translate((float)rand() / (float)RAND_MAX * 10 - 5,(float)rand() / (float)RAND_MAX * 10 - 5);
-				//(*it)->rotate(10);
-			}
-
-			glClear(GL_COLOR_BUFFER_BIT);
-			fm.display();
-			scene.display();
-
-		}
-		
-		scene.display();
-		
-
-        scene.destroy();
-        // Close and destroy the window
-        return 1;
+	return 1;
 }
 

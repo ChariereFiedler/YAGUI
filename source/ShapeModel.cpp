@@ -58,6 +58,7 @@ void ShapeModel::bindBuffers() const{
   glBindVertexArray(_VaoId);
   
   glBindBuffer(GL_ARRAY_BUFFER, _VboId);
+
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0,0);
   glEnableVertexAttribArray(0);
 }

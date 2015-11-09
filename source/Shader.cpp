@@ -75,8 +75,8 @@ bool Shader::load() {
   // Verrouillage des entr�es shader
 
   glBindAttribLocation(m_programID, 0, "in_Vertex");
-  glBindAttribLocation(m_programID, 1, "in_Color");
-  glBindAttribLocation(m_programID, 2, "in_TexCoord0");
+  glBindAttribLocation(m_programID, 1, "in_Normals");
+  glBindAttribLocation(m_programID, 2, "in_Uv");
 
 
   // Linkage du programme
@@ -147,7 +147,7 @@ bool Shader::compile(GLuint &shader, GLenum type, std::string const &fileSource)
   // Test d'ouverture
 
   if (!file) {
-    throw std::runtime_error("The source file relative to the filepath does not exist");
+    throw std::runtime_error("Cannot open the shader " + fileSource +", the source file relative to the filepath does not exist");
   }
   // Strings permettant de lire le code source
   std::string line;

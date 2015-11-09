@@ -5,25 +5,32 @@
  * Created on 15 novembre 2014, 16:52
  */
 #include <cstdlib>
-#include "FormeInstance.h"
+#include "Shape.h"
 #include <iostream>
 
 using namespace std;
 
-FormeInstance::FormeInstance(ShapeCollection &collection,  const glm::vec2 &pos,const glm::vec3 &color, float size, float angle):
+Shape::Shape(ShapeCollection &collection,  const glm::vec2 &pos,const glm::vec3 &color, float size, float angle):
 	_collection(collection),
 	_angle(angle)
 {
 	_indCollection = _collection.getNbObjects();
 	_collection.incNbObjects();
 	_collection._allPositions.push_back(pos);
+
+	_collection.positionBuffer.push_back(pos.x);
+	_collection.positionBuffer.push_back(pos.y);
+
+
+
 	_collection._allColors.push_back(color);
 	_collection._allAngles.push_back(angle);
     _collection._allSizes.push_back(size);
+
 	_vitesse = rand() / (float)RAND_MAX * 5;
 }
 
-FormeInstance::FormeInstance(const FormeInstance& orig):
+Shape::Shape(const Shape & orig):
 	_collection(orig._collection),
 	_vitesse(orig._vitesse)
 {
@@ -35,53 +42,53 @@ FormeInstance::FormeInstance(const FormeInstance& orig):
     _collection._allSizes.push_back(orig.getSize());
 }
 
-FormeInstance::~FormeInstance() {
-	//cout << "Delete FormeInstance" << endl;
+Shape::~Shape() {
+	//cout << "Delete Shape" << endl;
 	_collection.removeInstance(this);
 	
 }
 
-void FormeInstance::init(){
+void Shape::init(){
 	
 }
-const glm::vec3 & FormeInstance::getColor()const{
+const glm::vec3 &Shape::getColor()const{
   return _collection._allColors[_indCollection];
 }
-const glm::vec2 & FormeInstance::getPosition()const{
+const glm::vec2 &Shape::getPosition()const{
   return _collection._allPositions[_indCollection];
 }
 
-float FormeInstance::getAngle()const{
+float Shape::getAngle()const{
   return _collection._allAngles[_indCollection];
 }
 
-float FormeInstance::getSize()const{
+float Shape::getSize()const{
     return _collection._allSizes[_indCollection];
 }
 
-const glm::vec2 & FormeInstance::getTransform() const{
+const glm::vec2 &Shape::getTransform() const{
   return _transform;
 }
 
-int FormeInstance::getIndCollection() const{
+int Shape::getIndCollection() const{
 	return _indCollection;
 }
 
-void FormeInstance::setColor(const glm::vec3 & color){
+void Shape::setColor(const glm::vec3 & color){
   _collection._allColors[_indCollection] = color;
 }
 
-void FormeInstance::setColor(float r, float v, float b){
+void Shape::setColor(float r, float v, float b){
     setColor(glm::vec3(r, v, b));
 }
 
-void FormeInstance::setPosition(const glm::vec2 & position){
+void Shape::setPosition(const glm::vec2 & position){
  _collection._allPositions[_indCollection] = position;
 }
-void FormeInstance::setTransform(const glm::vec2 & transform){
+void Shape::setTransform(const glm::vec2 & transform){
   _transform = transform;
 }
-void FormeInstance::setAngle(float angle){
+void Shape::setAngle(float angle){
 
 	if(angle < 0)
 		angle = 360 + angle;
@@ -90,11 +97,11 @@ void FormeInstance::setAngle(float angle){
 	_collection._allAngles[_indCollection] = angle;
 }
 
-void FormeInstance::setSize(float size){
+void Shape::setSize(float size){
     _collection._allSizes[_indCollection] = size;
 }
 
-void FormeInstance::setIndCollection(unsigned int indice){
+void Shape::setIndCollection(unsigned int indice){
 	_collection._allColors[indice] = _collection._allColors[_indCollection];
 	_collection._allPositions[indice] = _collection._allPositions[_indCollection];
 	_indCollection = indice;
@@ -102,21 +109,21 @@ void FormeInstance::setIndCollection(unsigned int indice){
 }
 
 
-void FormeInstance::rotate(float angle){
+void Shape::rotate(float angle){
 	setAngle(_angle + angle);
 }
 
-void FormeInstance::translate(float x, float y){
+void Shape::translate(float x, float y){
 	_collection._allPositions[_indCollection] += glm::vec2(x,y);
 }
 
-void FormeInstance::effet(){
+void Shape::effect(){
 	_collection._allPositions[_indCollection].x += _vitesse;
 	if(_collection._allPositions[_indCollection].x > 800)
 		_collection._allPositions[_indCollection].x = 0;
 }
 
-FormeInstance& FormeInstance::operator=(const FormeInstance &orig){
+Shape &Shape::operator=(const Shape &orig){
 	_transform = orig._transform;
 
 	setColor(orig.getColor());
@@ -127,10 +134,10 @@ FormeInstance& FormeInstance::operator=(const FormeInstance &orig){
 	return *this;
 }
 
-void FormeInstance::addColor(float r, float v, float b) {
+void Shape::addColor(float r, float v, float b) {
     setColor(getColor() + glm::vec3(r, v, b));
 }
 
-void FormeInstance::addColor(const glm::vec3 &color) {
+void Shape::addColor(const glm::vec3 &color) {
     setColor(getColor() + color);
 }

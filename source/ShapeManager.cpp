@@ -25,26 +25,26 @@ bool ShapeManager::newCollection(std::string key, const GLuint & indShader, unsi
 
   if( comp( (*it).first, nbNodes ))
   {
-    it = _libRegularModels.emplace(nbNodes, generateRegularPolygone(nbNodes)).first;
+    it = _libRegularModels.emplace(nbNodes, generateRegularPolygon(nbNodes)).first;
   }
 
   return newCollection(key, indShader, *(it->second) );
 }
 
-bool ShapeManager::newCollection(std::string key, const GLuint & indShader, ShapeModel & modele){
-	 return _listCollections.emplace(key, ShapeCollection(indShader, modele )).second;
+bool ShapeManager::newCollection(std::string key, const GLuint & indShader, ShapeModel &model){
+	 return _listCollections.emplace(key, ShapeCollection(indShader, model)).second;
 }
 
-FormeInstance *ShapeManager::newObject(std::string key, const glm::vec2 &position, const glm::vec3 &color,float size, float angle){
+Shape *ShapeManager::newObject(std::string key, const glm::vec2 &position, const glm::vec3 &color,float size, float angle){
   std::map<std::string, ShapeCollection>::key_compare comp;
   std::map<std::string, ShapeCollection>::iterator it;
-  FormeInstance *instance;
+  Shape *instance;
   
   comp = _listCollections.key_comp();
   it = _listCollections.find(key);
   if( comp( (*it).first, key ))
 	  throw("Aucune collection correspondant à ce nom n'existe \n");
-  instance = new FormeInstance( it->second, position, color, size, angle);
+  instance = new Shape( it->second, position, color, size, angle);
   it->second.addInstance(instance);
   return instance;
 }
@@ -57,7 +57,7 @@ void ShapeManager::display(){
 	}
 }
 
-ShapeModel *ShapeManager::generateRegularPolygone(unsigned int nbNode){
+ShapeModel *ShapeManager::generateRegularPolygon(unsigned int nbNode){
   std::vector<float> nodes;
   std::vector<unsigned int> indices;
   if(nbNode > 2){
