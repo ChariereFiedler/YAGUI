@@ -69,6 +69,7 @@ ShapeModel *ShapeManager::generateRegularPolygon(unsigned int nbNode){
       nodes.push_back(cos(a));
       nodes.push_back(sin(a));
     }
+    
     for(unsigned int i = 2; i < nbNode; ++i){
       indices.push_back(0);
       indices.push_back(i-1);

@@ -23,6 +23,23 @@ class Geometry {
 
 public:
 
+    //TODO : implements Move Operator
+    void setVertices(const Buffer<GLfloat> &m_vertices) {
+        Geometry::m_vertices = m_vertices;
+    }
+
+    void setNormals(const Buffer<GLfloat> &m_normals) {
+        Geometry::m_normals = m_normals;
+    }
+
+    void setUv(const Buffer<GLfloat> &m_uv) {
+        Geometry::m_uv = m_uv;
+    }
+
+    void setIndices(const Buffer<GLuint> &m_indices) {
+        Geometry::m_indices = m_indices;
+    }
+
     void load(){
 
         std::cout<<"LoadGeometry"<<std::endl;
@@ -88,10 +105,10 @@ public:
             const std::vector<GLfloat> & dataUv,
             const std::vector<GLuint > & dataIndices
     ):
-            m_vertices( 0, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 3, 0,"Vertices", dataVertices),
+            m_vertices( 0, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 3, 1,"Vertices", dataVertices),
             m_normals(  1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 3, 1,"Normals", dataNormals),
             m_uv(       2, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 3, 1,"Uv", dataUv ),
-            m_indices(  3, GL_ELEMENT_ARRAY_BUFFER,GL_STATIC_DRAW,3, 1,"Indices",dataIndices )
+            m_indices(  3, GL_ELEMENT_ARRAY_BUFFER,GL_STATIC_DRAW,3, 0,"Indices",dataIndices )
     {
         std::cout << "Geometry () - copy" << std::endl;
         load();

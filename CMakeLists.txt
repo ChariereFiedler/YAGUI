@@ -6,8 +6,8 @@ project(YAGUI CXX C)
 
 message(status ${CMAKE_INCLUDE_PATH})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors ")
-set(CMAKE_CXX_FLAGS_RELEASE "")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wfatal-errors ")
+set(CMAKE_CXX_FLAGS_RELEASE "-g")
 
 if(PROJECT_BINARY_DIR STREQUAL PROJECT_SOURCE_DIR)
    message(FATAL_ERROR "In-tree build attempt detected, aborting. Set your build dir outside your source dir, delete CMakeCache.txt from source root and try again.")
@@ -65,7 +65,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 add_library(YAGUI ${source_files} include/GL_Error.h)
-target_link_libraries(YAGUI m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ADDITIONAL_LIBS} SDL2 SDL2main)
+target_link_libraries(YAGUI m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ADDITIONAL_LIBS} SDL2 SDL2main libassimp.dll)
 add_executable(YAGUI_Example example/main.cpp)
 target_link_libraries(YAGUI_Example m ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ADDITIONAL_LIBS} SDL2 SDL2main YAGUI)
 
@@ -74,6 +74,11 @@ set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
 file(GLOB SHADERS
-  "YAGUI/Shaders/*"
+    "YAGUI/Shaders/*"
 )
-file(COPY ${SHADERS} DESTINATION ${CMAKE_BINARY_DIR}/Shaders)
+file(GLOB MAPS
+    "YAGUI/map/*"
+)
+
+file(COPY ${SHADERS}    DESTINATION ${CMAKE_BINARY_DIR}/Shaders)
+file(COPY ${MAPS}       DESTINATION ${CMAKE_BINARY_DIR}/map)

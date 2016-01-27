@@ -11,18 +11,19 @@
 #include <GL_Error.h>
 #include <assert.h>
 
-Window::Window(std::string title,
-                   int x,
-                   int y,
-                   int w,
-                   int h,
-                   Uint32 flags):
+Window::Window(
+        std::string title,
+        int x,
+        int y,
+        int w,
+        int h,
+        Uint32 flags
+):
         x(x),
         y(y),
         w(w),
         h(h),
-        m_flags(flags),
-        m_window(0)
+        m_flags(flags)
 
 {
 }
@@ -45,6 +46,8 @@ void Window::display(){
     //rand();
 
     //glClearColor(float(rand())/RAND_MAX,rand()/RAND_MAX,rand()/RAND_MAX,1.);
+
+
     SDL_GL_SwapWindow(this->m_window);
     GL_CHECK_ERROR;
 }
@@ -61,7 +64,7 @@ void Window::load(){
     // Initialize OpenGL
     //Todo : Externalize this initialization step
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); // Opengl V 3.*
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1); // Opengl V *.3
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3); // Opengl V *.3
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     //SDL_GL_SetSwapInterval(0);
@@ -85,13 +88,13 @@ void Window::load(){
     GL_CHECK_ERROR;
 
 
-    //glewExperimental = GL_TRUE;
+    glewExperimental = GL_TRUE;
     GL_CHECK_ERROR;
     if(glewInit() != GLEW_OK)
         throw std::runtime_error("Unable do load Glew");
     glGetError();
     GL_CHECK_ERROR;
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     GL_CHECK_ERROR;
 
 

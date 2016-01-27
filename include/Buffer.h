@@ -39,6 +39,11 @@ template<typename E>   // primary template
         return GL_DOUBLE;
     }
 
+    template <>
+    inline GLenum getGLenumType<GLuint>() {
+        return GL_UNSIGNED_INT;
+    }
+
 
 
 template<typename T >
@@ -71,7 +76,7 @@ public:
     Buffer(const Buffer<T> & origin)
             : m_data(origin.getData()),
               m_index(origin.getIndex()),
-              m_id(origin.getSizePack()),
+              m_id(origin.getId()),
               m_sizePack(origin.getSizePack()),
               m_rate(origin.getRate()),
               m_type(origin.getType()),
@@ -145,29 +150,20 @@ public:
 
     void load(){
         std::cout<<"========================="<<std::endl;
-        std::cout<<"Begin BufferLoad"<<std::endl;
         glGenBuffers(1, &m_id);
         GL_CHECK_ERROR;
-        std::cout<<"Begin BufferLoad"<<std::endl;
         glBindBuffer(m_type, m_id);
         GL_CHECK_ERROR;
-        std::cout<<"Begin BufferLoad"<<std::endl;
-        glBufferData(m_type,(GLsizeiptr) m_data.size() * sizeof(T), (GLvoid *) m_data.data(), m_usage);
+        glBufferData(m_type, m_data.size() * sizeof(T), m_data.data(), m_usage);
         GL_CHECK_ERROR;
-        std::cout<<"Begin BufferLoad"<<std::endl;
         if(m_type != GL_ELEMENT_ARRAY_BUFFER) {
 
             glVertexAttribPointer(m_index, m_sizePack, getGLenumType<T>(), GL_FALSE, 0, 0);
-            std::cout<<"Begin BufferLoad"<<std::endl;
             GL_CHECK_ERROR;
             glEnableVertexAttribArray(m_index);
-            std::cout<<"Begin BufferLoad"<<std::endl;
             GL_CHECK_ERROR;
             std::cout<<m_index << ":" << m_rate<<std::endl;
-
-
             //glVertexAttribDivisor(m_index, m_rate);
-            std::cout<<"Begin BufferLoad"<<std::endl;
             GL_CHECK_ERROR;
         }
         std::cout<<"End"<<std::endl;

@@ -28,8 +28,8 @@ void Instance::display(const glm::mat4 & projection, const glm::mat4 &modelView)
     );
     GL_CHECK_ERROR;
 
-    //std::cout<<m_geometry.getIndices().size()<<std::endl;
-    glDrawElements(GL_TRIANGLES, m_geometry.getIndices().size(), GL_UNSIGNED_INT,(GLvoid*) 0);
+    std::cout<<m_geometry.getIndices().size()<<std::endl;
+    glDrawElements(GL_TRIANGLES, m_geometry.getIndices().size()*3, GL_UNSIGNED_INT,(GLvoid*) 0);
     GL_CHECK_ERROR;
 
     glUseProgram(0);
